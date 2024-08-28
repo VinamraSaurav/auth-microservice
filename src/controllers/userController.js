@@ -1,5 +1,5 @@
 const e = require('express');
-const {UserService} = require('../services/userService');
+const { UserService } = require('../services/userService');
 
 const create = async (req, res) => {
     try{

@@ -1,9 +1,12 @@
 const { User } = require("../models/index")
 
 class UserRepository{
+    constructor(){
+        this.model = User;
+    }
     async create(data){
         try{
-            const user = await User.create(data);
+            const user = await this.model.create(data);
             return user;
         } catch (error){
             console.error("Something went wrong in UserRepository.create:", error);
@@ -13,7 +16,7 @@ class UserRepository{
 
     async destroy(userId){
         try{
-            await User.destroy({
+            await this.model.destroy({
                 where: {
                     id: userId
                 }
@@ -26,4 +29,6 @@ class UserRepository{
     }
 }
 
-module.exports = new UserRepository();
+module.exports = {
+    UserRepository : new UserRepository()
+}
