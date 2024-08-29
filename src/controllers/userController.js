@@ -61,7 +61,112 @@ const create = async (req, res) => {
 //     }
 // }
 
+
+const findByEmail = async (req, res) => {
+    try{
+        const email = req.params.email;
+        const user = await UserService.findByEmail(email);
+        if(user){
+            return res.status(200).json({
+                message: "User found",
+                success: true,
+                data: user,
+                error: null
+            });
+        } else {
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+                data: {}
+            });
+        }
+    } catch(error){
+        console.error("Something went wrong in userController.findByEmail:", error);
+        return res.status(500).json({
+            message: "Something went wrong",
+            data: {},
+            success: false,
+            error: error
+        });
+    }
+}
+
+const getById = async (req, res) => {
+    try{
+        const userId = req.params.id;
+        const user = await UserService.getById(userId);
+        if(user){
+            return res.status(200).json({
+                message: "User found",
+                success: true,
+                data: user,
+                error: null
+            });
+        } else {
+            return res.status(404).json({
+                message: "User not found",
+                success: false,
+                data: {}
+            });
+        }
+    } catch(error){
+        console.error("Something went wrong in userController.getById:", error);
+        return res.status(500).json({
+            message: "Something went wrong",
+            data: {},
+            success: false,
+            error: error
+        });
+    }
+}
+
+const singIn = async (req, res) => {
+    try{
+        const data = await UserService.signIn(req.body.email, req.body.password);
+        return res.status(200).json({
+            message : "Sucessfully logged in",
+            data: data,
+            success: true,
+            error: {}
+        })
+    } catch(error){
+        console.error("Something went wrong in userController.signIn:", error);
+        return res.status(500).json({
+            message: "Something went wrong",
+            data: {},
+            success: false,
+            error: error
+        })
+    }
+
+}
+
+const isAuthenticated = async (req, res) => {
+    try{
+        const token = req.headers.authorization;
+        const user = await UserService.isAuthenticated(token);
+        return res.status(200).json({
+            message: "User authenticated and Token is Valid",
+            data: user,
+            success: true,
+            error: {}
+        })
+    } catch(error){
+        console.error("Something went wrong in userController.isAuthenticated:", error);
+        return res.status(500).json({
+            message: "Something went wrong",
+            data: {},
+            success: false,
+            error: error
+        })
+    }
+}
+
 module.exports = {
     create,
+    findByEmail,
+    getById,
+    singIn,
+    isAuthenticated
     // destroy
 }
