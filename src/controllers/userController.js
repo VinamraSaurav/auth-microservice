@@ -24,11 +24,11 @@ const create = async (req, res) => {
         }
     } catch (error){
         console.error("Something went wrong in userController.create:", error);
-        return res.status(500).json({
-            message: "Something went wrong",
+        return res.status(error.statusCode).json({
+            message: error.message,
             data : {},
             success: false,
-            error: error
+            error: error.explanation
         });
     }
 }
@@ -82,11 +82,11 @@ const findByEmail = async (req, res) => {
         }
     } catch(error){
         console.error("Something went wrong in userController.findByEmail:", error);
-        return res.status(500).json({
-            message: "Something went wrong",
+        return res.status(error.statusCode).json({
+            message: error.message,
             data: {},
             success: false,
-            error: error
+            error: error.explanation
         });
     }
 }
@@ -131,11 +131,11 @@ const singIn = async (req, res) => {
         })
     } catch(error){
         console.error("Something went wrong in userController.signIn:", error);
-        return res.status(500).json({
-            message: "Something went wrong",
+        return res.status(error.statusCode).json({
+            message: error.message,
             data: {},
             success: false,
-            error: error
+            error: error.explanation
         })
     }
 
@@ -160,13 +160,37 @@ const isAuthenticated = async (req, res) => {
             error: error
         })
     }
+
 }
 
+
+const isAdmin = async (req, res)=>{
+    try{
+        const response = await UserService.isAdmin(req.body.id);
+        // console.log(req.body.id, response);
+        return res.status(200).json({
+            message : "Successfully checked wether user is admin or not",
+            admin: response,
+            success: true,
+            error: {}
+        })
+
+    } catch(error){
+        console.error("Something went wrong in userController.isAdmin:", error);
+        return res.status(500).json({
+            message:"Something went wrong",
+            data:{},
+            success: false,
+            error: error
+        })
+    }
+}
 module.exports = {
     create,
     findByEmail,
     getById,
     singIn,
-    isAuthenticated
+    isAuthenticated,
+    isAdmin
     // destroy
 }

@@ -2,6 +2,8 @@ const {UserRepository} = require('../repositories/userRepository')
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const {JWT_SECRET} = require('../config/serverConfig');
+const ClientError = require('../utils/client-error');
+const { StatusCodes } = require('http-status-codes');
 
 class UserService{
     constructor(){
@@ -60,7 +62,12 @@ class UserService{
                     throw {error : "Invalid Password"}
                 }
             } else {
-                throw {error : "User not found"}
+                throw new ClientError(
+                    "AttributeNotFound",
+                    "Email not found",
+                    "Please check the email and try again",
+                    StatusCodes.NOT_FOUND
+                )
             }
         } catch(error){
             console.error("Something went wrong in UserService.signIn:", error);
@@ -84,6 +91,17 @@ class UserService{
             }
         } catch(error){
             console.error("Something went wrong in UserService.isAuthenticated:", error);
+            throw error;
+        }
+    }
+
+    async isAdmin(userId){
+        try{
+            const response = await this.userRepository.isAdmin(userId);
+            // console.log(response);
+            return response;
+        } catch(error){
+            console.error("Something went wrong in UserService.isAdmin:", error);
             throw error;
         }
     }

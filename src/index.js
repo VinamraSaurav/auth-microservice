@@ -10,13 +10,22 @@ const app = express();
 
 const bodyParser = require('body-parser');
 
+// const { User, Role } = require('../src/models/index');
 
 
 
-const prepareAndStartServer = () => {
+
+const prepareAndStartServer = async () => {
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use('/api', apiRoutes);
+
+    // const u1 = await User.findByPk(5);
+    // const r1 = await Role.findByPk(1);
+
+    // console.log(u1,r1);
+
+    // u1.addRole(r1);
     
     app.listen(port, () => {
         console.log('Server is running on port ' + port);
